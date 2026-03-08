@@ -78,10 +78,10 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-950 text-gray-100">
       <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
-      <div className="flex-1">
+      <div className="flex-1 md:ml-64 transition-all duration-300">
         <HeaderMobile />
         <main className="flex-1 overflow-y-auto pt-16 md:pt-4 pb-24">
-          <div className="container mx-auto p-4">
+          <div className="container mx-auto p-4 md:p-6">
             {children}
           </div>
         </main>
