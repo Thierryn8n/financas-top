@@ -44,6 +44,7 @@ export const receitasService = {
     const { data, error } = await supabase
       .from("receitas")
       .select("*")
+      .eq("user_id", user.id)
       .order("data", { ascending: false })
 
     if (error) throw error
@@ -103,6 +104,7 @@ export const despesasService = {
     const { data, error } = await supabase
       .from("despesas")
       .select("*")
+      .eq("user_id", user.id)
       .order("data", { ascending: false })
 
     if (error) throw error
@@ -162,6 +164,7 @@ export const sonhosService = {
     const { data, error } = await supabase
       .from("sonhos")
       .select("*")
+      .eq("user_id", user.id)
       .order("prioridade", { ascending: true })
 
     if (error) throw error

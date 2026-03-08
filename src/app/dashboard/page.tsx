@@ -31,6 +31,7 @@ interface DadosFinanceiros {
 export default function DashboardPage() {
   const [dados, setDados] = useState<DadosFinanceiros | null>(null)
   const [loading, setLoading] = useState(true)
+  const [erro, setErro] = useState<string | null>(null)
 
   useEffect(() => {
     carregarDados()
@@ -38,6 +39,7 @@ export default function DashboardPage() {
 
   const carregarDados = async () => {
     try {
+      setErro(null)
       const dadosFinanceiros = await calcularTotais()
       
       // Calcular histórico mensal
@@ -83,16 +85,51 @@ export default function DashboardPage() {
         gastosPorCategoria
       })
     } catch (error) {
-      console.error('Erro ao carregar dados:', error)
+      const mensagem = error instanceof Error ? error.message : 'Erro ao carregar dados financeiros'
+      setErro(mensagem)
     } finally {
       setLoading(false)
     }
   }
 
-  if (loading || !dados) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    )
+  }
+
+  if (erro) {
+    return (
+      <div className="p-4 md:p-6">
+        <h1 className="text-2xl md:text-3xl font-bold mb-4">Dashboard Financeiro</h1>
+        <Card className="p-6 bg-red-500/10 border-red-500/20">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-6 w-6 text-red-500" />
+            <div>
+              <h2 className="font-semibold text-red-500 mb-1">Erro ao carregar dados</h2>
+              <p className="text-sm text-gray-400">{erro}</p>
+              <button 
+                onClick={carregarDados}
+                className="mt-3 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded text-sm text-red-500 transition"
+              >
+                Tentar novamente
+              </button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  if (!dados) {
+    return (
+      <div className="p-4 md:p-6">
+        <h1 className="text-2xl md:text-3xl font-bold mb-4">Dashboard Financeiro</h1>
+        <Card className="p-6 bg-blue-500/10 border-blue-500/20">
+          <p className="text-gray-400">Nenhum dado financeiro encontrado. Comece criando receitas e despesas.</p>
+        </Card>
       </div>
     )
   }
